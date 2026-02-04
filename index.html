@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S1 Pipeline Analysis - FY2026 Q1-Q4</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #1a1a2e;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: #1a1a2e;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        .nav-tab {
+            padding: 12px 24px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .nav-tab:hover {
+            background: #f0f0f0;
+        }
+        .nav-tab.active {
+            background: #3366cc;
+            color: white;
+            border-color: #3366cc;
+        }
+        .view-section {
+            display: none;
+        }
+        .view-section.active {
+            display: block;
+        }
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .metric-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .metric-card.highlight {
+            background: linear-gradient(135deg, #3366cc 0%, #5588dd 100%);
+            color: white;
+        }
+        .metric-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        .metric-value {
+            font-size: 36px;
+            font-weight: 700;
+        }
+        .metric-change {
+            font-size: 13px;
+            margin-top: 8px;
+        }
+        .metric-change.positive {
+            color: #28a745;
+        }
+        .metric-change.negative {
+            color: #dc3545;
+        }
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+        @media (max-width: 900px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .chart-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .chart-card.full-width {
+            grid-column: span 2;
+        }
+        @media (max-width: 900px) {
+            .chart-card.full-width {
+                grid-column: span 1;
+            }
+        }
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        .chart-container.tall {
+            height: 400px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
+        .insight-box {
+            background: linear-gradient(135deg, #fff9e6 0%, #fff3cc 100%);
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        .insight-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #856404;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3366cc;
+        }
+        .data-table {
+            overflow-x: auto;
+        }
+        .trend-up::before {
+            content: "▲ ";
+            color: #28a745;
+        }
+        .trend-down::before {
+            content: "▼ ";
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>S1 Pipeline Analysis</h1>
+        <p class="subtitle">Marketing Influenced S1s by Segment, Source, and Events | FY2026 Q1-Q4 | Data as of Feb 4, 2026</p>
+
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showView('team-source')">Team Sources</div>
+            <div class="nav-tab" onclick="showView('events')">Events Analysis</div>
+            <div class="nav-tab" onclick="showView('channels')">Channel Breakdown</div>
+        </div>
+
+        <!-- VIEW 1: TEAM SOURCES -->
+        <div id="team-source" class="view-section active">
+            <div class="insight-box">
+                <div class="insight-title">Key Insights: Team Source Performance</div>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Marketing Sourced</strong> accounts for 54% of total S1s (396/731), growing from 91 in Q1 to 129 in Q4</li>
+                    <li><strong>BDR Outbound</strong> declined significantly from 63 S1s in Q1 to 26 in Q4 (59% decline)</li>
+                    <li><strong>AE Outbound</strong> improved from 15 S1s in Q1 to 38 in Q4 (153% growth), largely driven by SMB</li>
+                    <li><strong>Partner Sourced</strong> remains minimal at 3-7 S1s per quarter - opportunity for growth</li>
+                </ul>
+            </div>
+
+            <div class="metrics-row">
+                <div class="metric-card highlight">
+                    <div class="metric-label">Total Marketing Influenced S1s</div>
+                    <div class="metric-value">731</div>
+                    <div class="metric-change">Last 4 Quarters Combined</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Marketing Sourced</div>
+                    <div class="metric-value">396</div>
+                    <div class="metric-change positive">+42% Q1→Q4</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">BDR Outbound</div>
+                    <div class="metric-value">192</div>
+                    <div class="metric-change negative">-59% Q1→Q4</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">AE Outbound</div>
+                    <div class="metric-value">112</div>
+                    <div class="metric-change positive">+153% Q1→Q4</div>
+                </div>
+            </div>
+
+            <div class="chart-grid">
+                <div class="chart-card full-width">
+                    <div class="chart-title">Team Source S1s by Quarter</div>
+                    <div class="chart-container tall">
+                        <canvas id="teamSourceTrendChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Team Source Distribution (FY26 Total)</div>
+                    <div class="chart-container">
+                        <canvas id="teamSourcePieChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Marketing Sourced by Segment</div>
+                    <div class="chart-container">
+                        <canvas id="mktgSegmentChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title">Team Source Detailed Breakdown</h3>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Team Source</th>
+                            <th>Segment</th>
+                            <th>Q1 FY26</th>
+                            <th>Q2 FY26</th>
+                            <th>Q3 FY26</th>
+                            <th>Q4 FY26</th>
+                            <th>Total</th>
+                            <th>Trend</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background:#e8f4e8;font-weight:600;">
+                            <td>Marketing Sourced</td>
+                            <td>Total</td>
+                            <td>91</td>
+                            <td>85</td>
+                            <td>91</td>
+                            <td>129</td>
+                            <td>396</td>
+                            <td class="trend-up">+42%</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>ENT</td>
+                            <td>26</td>
+                            <td>16</td>
+                            <td>17</td>
+                            <td>9</td>
+                            <td>68</td>
+                            <td class="trend-down">-65%</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>MM</td>
+                            <td>25</td>
+                            <td>21</td>
+                            <td>25</td>
+                            <td>40</td>
+                            <td>111</td>
+                            <td class="trend-up">+60%</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>SMB</td>
+                            <td>40</td>
+                            <td>48</td>
+                            <td>49</td>
+                            <td>80</td>
+                            <td>217</td>
+                            <td class="trend-up">+100%</td>
+                        </tr>
+                        <tr style="background:#fff3e0;font-weight:600;">
+                            <td>BDR Outbound</td>
+                            <td>Total</td>
+                            <td>63</td>
+                            <td>66</td>
+                            <td>37</td>
+                            <td>26</td>
+                            <td>192</td>
+                            <td class="trend-down">-59%</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>ENT</td>
+                            <td>33</td>
+                            <td>24</td>
+                            <td>13</td>
+                            <td>11</td>
+                            <td>81</td>
+                            <td class="trend-down">-67%</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>MM</td>
+                            <td>18</td>
+                            <td>28</td>
+                            <td>16</td>
+                            <td>12</td>
+                            <td>74</td>
+                            <td class="trend-down">-33%</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>SMB</td>
+                            <td>12</td>
+                            <td>14</td>
+                            <td>8</td>
+                            <td>3</td>
+                            <td>37</td>
+                            <td class="trend-down">-75%</td>
+                        </tr>
+                        <tr style="background:#e3f2fd;font-weight:600;">
+                            <td>AE Outbound</td>
+                            <td>Total</td>
+                            <td>15</td>
+                            <td>17</td>
+                            <td>42</td>
+                            <td>38</td>
+                            <td>112</td>
+                            <td class="trend-up">+153%</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>ENT</td>
+                            <td>6</td>
+                            <td>9</td>
+                            <td>6</td>
+                            <td>7</td>
+                            <td>28</td>
+                            <td class="trend-up">+17%</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>MM</td>
+                            <td>5</td>
+                            <td>7</td>
+                            <td>6</td>
+                            <td>7</td>
+                            <td>25</td>
+                            <td class="trend-up">+40%</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>SMB</td>
+                            <td>4</td>
+                            <td>1</td>
+                            <td>30</td>
+                            <td>24</td>
+                            <td>59</td>
+                            <td class="trend-up">+500%</td>
+                        </tr>
+                        <tr style="background:#f3e5f5;font-weight:600;">
+                            <td>Partner Sourced</td>
+                            <td>Total</td>
+                            <td>2</td>
+                            <td>7</td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td>15</td>
+                            <td>+50%</td>
+                        </tr>
+                        <tr style="background:#fce4ec;font-weight:600;">
+                            <td>Marketing Assisted</td>
+                            <td>Total</td>
+                            <td>19</td>
+                            <td>6</td>
+                            <td>1</td>
+                            <td>6</td>
+                            <td>32</td>
+                            <td class="trend-down">-68%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW 2: EVENTS ANALYSIS -->
+        <div id="events" class="view-section">
+            <div class="insight-box">
+                <div class="insight-title">Key Insights: Events Performance</div>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Events drove 147 S1s</strong> (20% of all marketing influenced), but declined 91% from Q1 (86) to Q4 (8)</li>
+                    <li><strong>ENT segment dominated Events</strong> with 85 S1s (58% of all event S1s), but dropped from 54 in Q1 to just 6 in Q4</li>
+                    <li><strong>Gladly Events were the top performer</strong> generating 90 S1s, followed by Event Demo (38) and External Events (14)</li>
+                    <li><strong>Sales Referred Events</strong> contributed 48 additional S1s when campaign names contained "event"</li>
+                    <li><strong>Critical concern:</strong> Events as an ENT pipeline driver have nearly collapsed - needs strategic review</li>
+                </ul>
+            </div>
+
+            <div class="metrics-row">
+                <div class="metric-card highlight">
+                    <div class="metric-label">Total Event S1s</div>
+                    <div class="metric-value">147</div>
+                    <div class="metric-change">20% of All Marketing Influenced</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">ENT from Events</div>
+                    <div class="metric-value">85</div>
+                    <div class="metric-change negative">-89% Q1→Q4</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Q1 FY26 Events</div>
+                    <div class="metric-value">86</div>
+                    <div class="metric-change">Peak Quarter</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Q4 FY26 Events</div>
+                    <div class="metric-value">8</div>
+                    <div class="metric-change negative">Lowest Quarter</div>
+                </div>
+            </div>
+
+            <div class="chart-grid">
+                <div class="chart-card full-width">
+                    <div class="chart-title">Events vs Non-Events S1s by Quarter</div>
+                    <div class="chart-container tall">
+                        <canvas id="eventsVsNonEventsChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Event S1s by Segment</div>
+                    <div class="chart-container">
+                        <canvas id="eventsBySegmentChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Event Type Distribution</div>
+                    <div class="chart-container">
+                        <canvas id="eventTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title">Events Detail: S1s by Segment and Quarter</h3>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Q1 FY26</th>
+                            <th>Q2 FY26</th>
+                            <th>Q3 FY26</th>
+                            <th>Q4 FY26</th>
+                            <th>Total</th>
+                            <th>% of Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="font-weight:600;background:#e8f4e8;">
+                            <td>All Events</td>
+                            <td>86</td>
+                            <td>36</td>
+                            <td>17</td>
+                            <td>8</td>
+                            <td>147</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;&nbsp;ENT</td>
+                            <td>54</td>
+                            <td>16</td>
+                            <td>9</td>
+                            <td>6</td>
+                            <td>85</td>
+                            <td>58%</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;&nbsp;MM</td>
+                            <td>19</td>
+                            <td>8</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td>31</td>
+                            <td>21%</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;&nbsp;SMB</td>
+                            <td>13</td>
+                            <td>12</td>
+                            <td>6</td>
+                            <td>0</td>
+                            <td>31</td>
+                            <td>21%</td>
+                        </tr>
+                        <tr style="font-weight:600;background:#fff3e0;">
+                            <td>Non-Events</td>
+                            <td>126</td>
+                            <td>126</td>
+                            <td>128</td>
+                            <td>204</td>
+                            <td>584</td>
+                            <td>80%</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;&nbsp;ENT</td>
+                            <td>39</td>
+                            <td>25</td>
+                            <td>22</td>
+                            <td>22</td>
+                            <td>108</td>
+                            <td>18%</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;&nbsp;MM</td>
+                            <td>32</td>
+                            <td>37</td>
+                            <td>34</td>
+                            <td>64</td>
+                            <td>167</td>
+                            <td>29%</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;&nbsp;SMB</td>
+                            <td>55</td>
+                            <td>64</td>
+                            <td>72</td>
+                            <td>118</td>
+                            <td>309</td>
+                            <td>53%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="section-title">Event Types Breakdown</h3>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Event Type</th>
+                            <th>Q1 FY26</th>
+                            <th>Q2 FY26</th>
+                            <th>Q3 FY26</th>
+                            <th>Q4 FY26</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Gladly Event</td>
+                            <td>57</td>
+                            <td>18</td>
+                            <td>11</td>
+                            <td>4</td>
+                            <td>90</td>
+                        </tr>
+                        <tr>
+                            <td>Event Demo</td>
+                            <td>26</td>
+                            <td>8</td>
+                            <td>3</td>
+                            <td>1</td>
+                            <td>38</td>
+                        </tr>
+                        <tr>
+                            <td>External Event</td>
+                            <td>1</td>
+                            <td>7</td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td>14</td>
+                        </tr>
+                        <tr>
+                            <td>Event Sourced (Channel)</td>
+                            <td>24</td>
+                            <td>16</td>
+                            <td>10</td>
+                            <td>5</td>
+                            <td>55</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW 3: CHANNEL BREAKDOWN -->
+        <div id="channels" class="view-section">
+            <div class="insight-box">
+                <div class="insight-title">Key Insights: Channel Performance</div>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Organic Web is the top channel</strong> with 292 S1s (40%), though declining from 86 in Q1 to 63 in Q4</li>
+                    <li><strong>Paid Social showed explosive growth</strong> from 16 S1s in Q1 to 91 in Q4 (+469%!) - now #2 channel</li>
+                    <li><strong>Sales Referred declined sharply</strong> from 46 S1s in Q1 to just 10 in Q4 - correlates with events decline</li>
+                    <li><strong>For ENT specifically:</strong> Organic Web (58), Sales Referred (38), and Email (31) are top 3 drivers</li>
+                    <li><strong>Paid Search remains steady</strong> at 14-17 S1s per quarter - consistent performer</li>
+                </ul>
+            </div>
+
+            <div class="metrics-row">
+                <div class="metric-card highlight">
+                    <div class="metric-label">Top Channel</div>
+                    <div class="metric-value">Organic Web</div>
+                    <div class="metric-change">292 S1s (40%)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Fastest Growing</div>
+                    <div class="metric-value">Paid Social</div>
+                    <div class="metric-change positive">+469% Q1→Q4</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Most Consistent</div>
+                    <div class="metric-value">Paid Search</div>
+                    <div class="metric-change">63 S1s (steady)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Biggest Decline</div>
+                    <div class="metric-value">Sales Referred</div>
+                    <div class="metric-change negative">-78% Q1→Q4</div>
+                </div>
+            </div>
+
+            <div class="chart-grid">
+                <div class="chart-card full-width">
+                    <div class="chart-title">Channel Source Performance by Quarter</div>
+                    <div class="chart-container tall">
+                        <canvas id="channelTrendChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Channel Distribution (FY26 Total)</div>
+                    <div class="chart-container">
+                        <canvas id="channelPieChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">ENT S1s by Channel Source</div>
+                    <div class="chart-container">
+                        <canvas id="entChannelChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title">Channel Source by Segment</h3>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Channel Source</th>
+                            <th>ENT</th>
+                            <th>MM</th>
+                            <th>SMB</th>
+                            <th>Total</th>
+                            <th>% of Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Organic Web</td>
+                            <td>58</td>
+                            <td>79</td>
+                            <td>155</td>
+                            <td>292</td>
+                            <td>40%</td>
+                        </tr>
+                        <tr>
+                            <td>Paid Social</td>
+                            <td>22</td>
+                            <td>45</td>
+                            <td>90</td>
+                            <td>157</td>
+                            <td>21%</td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>31</td>
+                            <td>23</td>
+                            <td>23</td>
+                            <td>77</td>
+                            <td>11%</td>
+                        </tr>
+                        <tr>
+                            <td>Sales Referred</td>
+                            <td>38</td>
+                            <td>15</td>
+                            <td>19</td>
+                            <td>72</td>
+                            <td>10%</td>
+                        </tr>
+                        <tr>
+                            <td>Paid Search</td>
+                            <td>9</td>
+                            <td>20</td>
+                            <td>34</td>
+                            <td>63</td>
+                            <td>9%</td>
+                        </tr>
+                        <tr>
+                            <td>Event Sourced</td>
+                            <td>28</td>
+                            <td>13</td>
+                            <td>14</td>
+                            <td>55</td>
+                            <td>8%</td>
+                        </tr>
+                        <tr>
+                            <td>Content Syndication</td>
+                            <td>2</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>5</td>
+                            <td>1%</td>
+                        </tr>
+                        <tr>
+                            <td>Other</td>
+                            <td>5</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>10</td>
+                            <td>1%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="section-title">Channel Performance Trend</h3>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Channel Source</th>
+                            <th>Q1 FY26</th>
+                            <th>Q2 FY26</th>
+                            <th>Q3 FY26</th>
+                            <th>Q4 FY26</th>
+                            <th>Total</th>
+                            <th>Q1→Q4 Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Organic Web</td>
+                            <td>86</td>
+                            <td>85</td>
+                            <td>58</td>
+                            <td>63</td>
+                            <td>292</td>
+                            <td class="trend-down">-27%</td>
+                        </tr>
+                        <tr style="background:#e8f4e8;">
+                            <td>Paid Social</td>
+                            <td>16</td>
+                            <td>11</td>
+                            <td>39</td>
+                            <td>91</td>
+                            <td>157</td>
+                            <td class="trend-up">+469%</td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>19</td>
+                            <td>20</td>
+                            <td>14</td>
+                            <td>24</td>
+                            <td>77</td>
+                            <td class="trend-up">+26%</td>
+                        </tr>
+                        <tr style="background:#ffebee;">
+                            <td>Sales Referred</td>
+                            <td>46</td>
+                            <td>11</td>
+                            <td>5</td>
+                            <td>10</td>
+                            <td>72</td>
+                            <td class="trend-down">-78%</td>
+                        </tr>
+                        <tr>
+                            <td>Paid Search</td>
+                            <td>15</td>
+                            <td>17</td>
+                            <td>17</td>
+                            <td>14</td>
+                            <td>63</td>
+                            <td>-7%</td>
+                        </tr>
+                        <tr style="background:#ffebee;">
+                            <td>Event Sourced</td>
+                            <td>24</td>
+                            <td>16</td>
+                            <td>10</td>
+                            <td>5</td>
+                            <td>55</td>
+                            <td class="trend-down">-79%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showView(viewId) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        const colors = {
+            primary: '#3366cc',
+            secondary: '#dc3912',
+            tertiary: '#ff9900',
+            quaternary: '#109618',
+            quinary: '#990099',
+            senary: '#0099c6',
+            ent: '#3366cc',
+            mm: '#ff9900',
+            smb: '#109618'
+        };
+
+        // Team Source Trend Chart
+        new Chart(document.getElementById('teamSourceTrendChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Q1 FY26', 'Q2 FY26', 'Q3 FY26', 'Q4 FY26'],
+                datasets: [
+                    {
+                        label: 'Marketing Sourced',
+                        data: [91, 85, 91, 129],
+                        backgroundColor: colors.primary
+                    },
+                    {
+                        label: 'BDR Outbound',
+                        data: [63, 66, 37, 26],
+                        backgroundColor: colors.tertiary
+                    },
+                    {
+                        label: 'AE Outbound',
+                        data: [15, 17, 42, 38],
+                        backgroundColor: colors.quaternary
+                    },
+                    {
+                        label: 'Partner Sourced',
+                        data: [2, 7, 3, 3],
+                        backgroundColor: colors.quinary
+                    },
+                    {
+                        label: 'Marketing Assisted',
+                        data: [19, 6, 1, 6],
+                        backgroundColor: colors.senary
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    x: { stacked: true },
+                    y: { stacked: true, beginAtZero: true }
+                }
+            }
+        });
+
+        // Team Source Pie Chart
+        new Chart(document.getElementById('teamSourcePieChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Marketing Sourced', 'BDR Outbound', 'AE Outbound', 'Marketing Assisted', 'Partner Sourced'],
+                datasets: [{
+                    data: [396, 192, 112, 32, 15],
+                    backgroundColor: [colors.primary, colors.tertiary, colors.quaternary, colors.senary, colors.quinary]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right' }
+                }
+            }
+        });
+
+        // Marketing Sourced by Segment
+        new Chart(document.getElementById('mktgSegmentChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Q1 FY26', 'Q2 FY26', 'Q3 FY26', 'Q4 FY26'],
+                datasets: [
+                    {
+                        label: 'ENT',
+                        data: [26, 16, 17, 9],
+                        backgroundColor: colors.ent
+                    },
+                    {
+                        label: 'MM',
+                        data: [25, 21, 25, 40],
+                        backgroundColor: colors.mm
+                    },
+                    {
+                        label: 'SMB',
+                        data: [40, 48, 49, 80],
+                        backgroundColor: colors.smb
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'top' } },
+                scales: {
+                    x: { stacked: true },
+                    y: { stacked: true, beginAtZero: true }
+                }
+            }
+        });
+
+        // Events vs Non-Events Chart
+        new Chart(document.getElementById('eventsVsNonEventsChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Q1 FY26', 'Q2 FY26', 'Q3 FY26', 'Q4 FY26'],
+                datasets: [
+                    {
+                        label: 'Events',
+                        data: [86, 36, 17, 8],
+                        backgroundColor: colors.secondary
+                    },
+                    {
+                        label: 'Non-Events',
+                        data: [126, 126, 128, 204],
+                        backgroundColor: colors.primary
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'top' } },
+                scales: {
+                    x: { stacked: true },
+                    y: { stacked: true, beginAtZero: true }
+                }
+            }
+        });
+
+        // Events by Segment Chart
+        new Chart(document.getElementById('eventsBySegmentChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Q1 FY26', 'Q2 FY26', 'Q3 FY26', 'Q4 FY26'],
+                datasets: [
+                    {
+                        label: 'ENT',
+                        data: [54, 16, 9, 6],
+                        backgroundColor: colors.ent
+                    },
+                    {
+                        label: 'MM',
+                        data: [19, 8, 2, 2],
+                        backgroundColor: colors.mm
+                    },
+                    {
+                        label: 'SMB',
+                        data: [13, 12, 6, 0],
+                        backgroundColor: colors.smb
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'top' } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // Event Type Distribution
+        new Chart(document.getElementById('eventTypeChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Gladly Event', 'Event Sourced', 'Event Demo', 'External Event'],
+                datasets: [{
+                    data: [90, 55, 38, 14],
+                    backgroundColor: [colors.primary, colors.tertiary, colors.quaternary, colors.quinary]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'right' } }
+            }
+        });
+
+        // Channel Trend Chart
+        new Chart(document.getElementById('channelTrendChart'), {
+            type: 'line',
+            data: {
+                labels: ['Q1 FY26', 'Q2 FY26', 'Q3 FY26', 'Q4 FY26'],
+                datasets: [
+                    {
+                        label: 'Organic Web',
+                        data: [86, 85, 58, 63],
+                        borderColor: colors.primary,
+                        backgroundColor: colors.primary + '20',
+                        tension: 0.3,
+                        fill: false
+                    },
+                    {
+                        label: 'Paid Social',
+                        data: [16, 11, 39, 91],
+                        borderColor: colors.secondary,
+                        backgroundColor: colors.secondary + '20',
+                        tension: 0.3,
+                        fill: false
+                    },
+                    {
+                        label: 'Email',
+                        data: [19, 20, 14, 24],
+                        borderColor: colors.tertiary,
+                        backgroundColor: colors.tertiary + '20',
+                        tension: 0.3,
+                        fill: false
+                    },
+                    {
+                        label: 'Sales Referred',
+                        data: [46, 11, 5, 10],
+                        borderColor: colors.quaternary,
+                        backgroundColor: colors.quaternary + '20',
+                        tension: 0.3,
+                        fill: false
+                    },
+                    {
+                        label: 'Paid Search',
+                        data: [15, 17, 17, 14],
+                        borderColor: colors.quinary,
+                        backgroundColor: colors.quinary + '20',
+                        tension: 0.3,
+                        fill: false
+                    },
+                    {
+                        label: 'Event Sourced',
+                        data: [24, 16, 10, 5],
+                        borderColor: colors.senary,
+                        backgroundColor: colors.senary + '20',
+                        tension: 0.3,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'top' } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // Channel Pie Chart
+        new Chart(document.getElementById('channelPieChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Organic Web', 'Paid Social', 'Email', 'Sales Referred', 'Paid Search', 'Event Sourced', 'Other'],
+                datasets: [{
+                    data: [292, 157, 77, 72, 63, 55, 15],
+                    backgroundColor: [colors.primary, colors.secondary, colors.tertiary, colors.quaternary, colors.quinary, colors.senary, '#aaa']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'right' } }
+            }
+        });
+
+        // ENT Channel Chart
+        new Chart(document.getElementById('entChannelChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Organic Web', 'Sales Referred', 'Email', 'Event Sourced', 'Paid Social', 'Paid Search'],
+                datasets: [{
+                    label: 'ENT S1s',
+                    data: [58, 38, 31, 28, 22, 9],
+                    backgroundColor: colors.ent
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: { legend: { display: false } },
+                scales: { x: { beginAtZero: true } }
+            }
+        });
+    </script>
+</body>
+</html>
