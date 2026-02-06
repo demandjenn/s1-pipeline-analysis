@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S1 Pipeline Plan — FY2027 | Team Source Distribution & Efficiency Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: #C5B3F8;
+            color: #252525;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .executive-summary {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #3366cc;
+        }
+
+        .executive-summary h2 {
+            color: #3366cc;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .executive-summary p {
+            margin-bottom: 16px;
+            text-align: justify;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .executive-summary p:last-child {
+            margin-bottom: 0;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .nav-tab {
+            padding: 14px 24px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-size: 1em;
+            font-weight: 500;
+            color: #666;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-tab:hover {
+            color: #3366cc;
+        }
+
+        .nav-tab.active {
+            color: #3366cc;
+            font-weight: 600;
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #3366cc;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #3366cc;
+            margin-bottom: 4px;
+        }
+
+        .metric-subtext {
+            font-size: 0.85em;
+            color: #999;
+        }
+
+        .insight-box {
+            background: #f0f4ff;
+            border-left: 4px solid #ff9900;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            line-height: 1.7;
+            color: #333;
+        }
+
+        .insight-box h3 {
+            color: #ff9900;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .insight-box ul {
+            margin-left: 20px;
+            margin-top: 12px;
+        }
+
+        .insight-box li {
+            margin-bottom: 10px;
+            color: #444;
+        }
+
+        .insight-box strong {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .chart-container {
+            position: relative;
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .chart-container h3 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            margin-bottom: 10px;
+        }
+
+        .chart-wrapper.tall {
+            height: 400px;
+        }
+
+        .table-container {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .table-container h3 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95em;
+        }
+
+        table th {
+            background-color: #f0f0f0;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #3366cc;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        table tbody tr.subtotal {
+            font-weight: 600;
+            background-color: #f5f7fa;
+        }
+
+        table tbody tr.subtotal td {
+            border-top: 1px solid #3366cc;
+        }
+
+        table tbody tr.highlight {
+            background-color: #fffae6;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .footer {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            margin-top: 40px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.9em;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .metric-card, .insight-box, .chart-container, .table-container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+            .nav-tabs {
+                display: none;
+            }
+
+            .tab-content {
+                display: block !important;
+                page-break-inside: avoid;
+            }
+
+            .header {
+                box-shadow: none;
+                border-bottom: 2px solid #3366cc;
+            }
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+                border-bottom: none;
+            }
+
+            .nav-tab {
+                border-bottom: 1px solid #ddd;
+                padding: 12px 16px;
+            }
+
+            .nav-tab.active::after {
+                display: none;
+            }
+
+            .nav-tab.active {
+                background-color: #f0f4ff;
+                border-left: 3px solid #3366cc;
+                padding-left: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>S1 Pipeline Plan — FY2027</h1>
+        <p class="subtitle">Team Source Distribution & Efficiency Analysis</p>
+    </div>
+
+    <div class="container">
+        <!-- Executive Summary -->
+        <div class="executive-summary">
+            <h2>Executive Summary</h2>
+            <p>This plan outlines how marketing and sales development will deliver 1,789 S1 opportunities in FY27, supporting the company's $12.0M ARR target. The plan operates within a $4.0M marketing budget by leveraging efficiency improvements across all sourcing teams.</p>
+            <p>The most significant structural change is a deliberate rebalancing of team source distribution. Marketing Sourced remains the primary engine at 53% of all S1s (956), but AE Outbound expands substantially from 19% to 30% (538 S1s). BDR Outbound holds steady at 12% with a sharper focus on ENT and MM segments, while Partner Sourced scales modestly to 4%. The rebalancing reduces single-point-of-failure risk on marketing while capitalizing on the strong AE outbound trajectory seen in FY26.</p>
+            <p>The critical enabler is efficiency improvement. The plan assumes front-loaded efficiency ramps (33% marketing improvement in Q1, 100% AE outbound ramp in Q1) with gains moderating through the year. These assumptions are aggressive but grounded in the AE productivity trends observed in Q3-Q4 FY26, where S1 per AE jumped from 3 to 8. Segment-level conversion rates (ENT at 6%, MM at 10.6%, SMB at 19.5%) are based on trailing averages and translate the S1 volume into $4.4M in marketing-sourced ARR, representing roughly 37% of the total ARR target.</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab(event, 'tab1')">S1 Target Overview</button>
+            <button class="nav-tab" onclick="showTab(event, 'tab2')">Efficiency Assumptions</button>
+            <button class="nav-tab" onclick="showTab(event, 'tab3')">Segment Breakdown</button>
+            <button class="nav-tab" onclick="showTab(event, 'tab4')">Budget & Investment</button>
+        </div>
+
+        <!-- TAB 1: S1 Target Overview -->
+        <div id="tab1" class="tab-content active">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">FY27 S1 Target (Annual)</div>
+                    <div class="metric-value">1,789</div>
+                    <div class="metric-subtext">Q1: 287 | Q2: 369 | Q3: 491 | Q4: 665</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">ARR Target (Annual)</div>
+                    <div class="metric-value">$12.0M</div>
+                    <div class="metric-subtext">Blended across segments</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Modified Budget</div>
+                    <div class="metric-value">$4.0M</div>
+                    <div class="metric-subtext">Down from $4.3M historical</div>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <h3>Key Insights</h3>
+                <ul>
+                    <li><strong>Volume Growth:</strong> The FY27 plan targets 1,789 total S1s (up from ~747 actual in the trailing 4 quarters), driven by scaling efficiency across all teams.</li>
+                    <li><strong>Marketing Sourced Dominance:</strong> Marketing Sourced grows to encompass 956 S1s (53% of total), reflecting continued reliance on marketing as the primary demand engine.</li>
+                    <li><strong>AE Outbound Expansion:</strong> AE Outbound ramps aggressively to 538 S1s (30% of total), up from 19% historically — this is the single largest shift in team source distribution.</li>
+                    <li><strong>BDR Refocus:</strong> BDR Outbound holds at 223 S1s (12%), down from 26% historically. This reflects both a deliberate segment shift — BDRs were moved off SMB to focus exclusively on ENT and MM — as well as headcount changes and evolving performance trends in FY26.</li>
+                    <li><strong>Partner Growth:</strong> Partner Sourced scales to 70 S1s (4%), up from ~2% historically — this relies on 75% quarterly growth assumptions across segments.</li>
+                </ul>
+            </div>
+
+            <div class="chart-container">
+                <h3>FY27 S1 Targets by Team Source & Quarter</h3>
+                <div class="chart-wrapper">
+                    <canvas id="chart1"></canvas>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="chart-container">
+                    <h3>FY27 Team Source Distribution</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="chart2"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3>Team Source Share: FY26 vs FY27 Plan</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="chart3"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <h3>FY27 S1 Targets by Team Source, Segment, and Quarter</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Team Source</th>
+                            <th class="text-right">Segment</th>
+                            <th class="text-right">Q1FY27</th>
+                            <th class="text-right">Q2FY27</th>
+                            <th class="text-right">Q3FY27</th>
+                            <th class="text-right">Q4FY27</th>
+                            <th class="text-right">Annual Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="subtotal">
+                            <td colspan="2">Marketing Sourced Total</td>
+                            <td class="text-right">166</td>
+                            <td class="text-right">200</td>
+                            <td class="text-right">257</td>
+                            <td class="text-right">333</td>
+                            <td class="text-right">956</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>ENT</td>
+                            <td class="text-right">20</td>
+                            <td class="text-right">25</td>
+                            <td class="text-right">26</td>
+                            <td class="text-right">29</td>
+                            <td class="text-right">101</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>MM</td>
+                            <td class="text-right">48</td>
+                            <td class="text-right">56</td>
+                            <td class="text-right">49</td>
+                            <td class="text-right">52</td>
+                            <td class="text-right">204</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>SMB</td>
+                            <td class="text-right">98</td>
+                            <td class="text-right">119</td>
+                            <td class="text-right">182</td>
+                            <td class="text-right">252</td>
+                            <td class="text-right">651</td>
+                        </tr>
+                        <tr class="subtotal">
+                            <td colspan="2">AE Outbound Total</td>
+                            <td class="text-right">68</td>
+                            <td class="text-right">102</td>
+                            <td class="text-right">146</td>
+                            <td class="text-right">222</td>
+                            <td class="text-right">538</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>ENT</td>
+                            <td class="text-right">14</td>
+                            <td class="text-right">20</td>
+                            <td class="text-right">22</td>
+                            <td class="text-right">26</td>
+                            <td class="text-right">81</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>MM</td>
+                            <td class="text-right">18</td>
+                            <td class="text-right">18</td>
+                            <td class="text-right">21</td>
+                            <td class="text-right">25</td>
+                            <td class="text-right">81</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>SMB</td>
+                            <td class="text-right">36</td>
+                            <td class="text-right">65</td>
+                            <td class="text-right">104</td>
+                            <td class="text-right">171</td>
+                            <td class="text-right">376</td>
+                        </tr>
+                        <tr class="subtotal">
+                            <td colspan="2">BDR Outbound Total</td>
+                            <td class="text-right">41</td>
+                            <td class="text-right">50</td>
+                            <td class="text-right">63</td>
+                            <td class="text-right">69</td>
+                            <td class="text-right">223</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td></td>
+                            <td>ENT</td>
+                            <td class="text-right">22</td>
+                            <td class="text-right">31</td>
+                            <td class="text-right">34</td>
+                            <td class="text-right">41</td>
+                            <td class="text-right">127</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>MM</td>
+                            <td class="text-right">19</td>
+                            <td class="text-right">19</td>
+                            <td class="text-right">29</td>
+                            <td class="text-right">29</td>
+                            <td class="text-right">96</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>SMB</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr class="subtotal">
+                            <td colspan="2">Partner Sourced Total</td>
+                            <td class="text-right">6</td>
+                            <td class="text-right">11</td>
+                            <td class="text-right">19</td>
+                            <td class="text-right">34</td>
+                            <td class="text-right">70</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>ENT</td>
+                            <td class="text-right">1</td>
+                            <td class="text-right">2</td>
+                            <td class="text-right">3</td>
+                            <td class="text-right">6</td>
+                            <td class="text-right">12</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>MM</td>
+                            <td class="text-right">2</td>
+                            <td class="text-right">3</td>
+                            <td class="text-right">5</td>
+                            <td class="text-right">9</td>
+                            <td class="text-right">20</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>SMB</td>
+                            <td class="text-right">4</td>
+                            <td class="text-right">6</td>
+                            <td class="text-right">11</td>
+                            <td class="text-right">19</td>
+                            <td class="text-right">39</td>
+                        </tr>
+                        <tr class="subtotal">
+                            <td colspan="2">Marketing Assisted Total</td>
+                            <td class="text-right">6</td>
+                            <td class="text-right">6</td>
+                            <td class="text-right">6</td>
+                            <td class="text-right">6</td>
+                            <td class="text-right">24</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>ENT</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>MM</td>
+                            <td class="text-right">4</td>
+                            <td class="text-right">4</td>
+                            <td class="text-right">4</td>
+                            <td class="text-right">4</td>
+                            <td class="text-right">16</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>SMB</td>
+                            <td class="text-right">2</td>
+                            <td class="text-right">2</td>
+                            <td class="text-right">2</td>
+                            <td class="text-right">2</td>
+                            <td class="text-right">8</td>
+                        </tr>
+                        <tr class="subtotal" style="background-color: #e8f0ff;">
+                            <td colspan="2"><strong>Grand Total</strong></td>
+                            <td class="text-right"><strong>287</strong></td>
+                            <td class="text-right"><strong>369</strong></td>
+                            <td class="text-right"><strong>491</strong></td>
+                            <td class="text-right"><strong>665</strong></td>
+                            <td class="text-right"><strong>1,811</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top: 12px; color: #666; font-size: 0.9em;"><em>Note: Grand total of 1,811 provides +22 buffer above the 1,789 S1 target.</em></p>
+            </div>
+
+            <div class="grid-2">
+                <div class="table-container">
+                    <h3>Q1FY27 Pipeline Snapshot by Segment</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="text-right">Total</th>
+                                <th class="text-right">ENT</th>
+                                <th class="text-right">MM</th>
+                                <th class="text-right">SMB</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>S0s</td>
+                                <td class="text-right">494</td>
+                                <td class="text-right">114</td>
+                                <td class="text-right">180</td>
+                                <td class="text-right">200</td>
+                            </tr>
+                            <tr class="subtotal">
+                                <td><strong>S1s</strong></td>
+                                <td class="text-right"><strong>287</strong></td>
+                                <td class="text-right"><strong>57</strong></td>
+                                <td class="text-right"><strong>90</strong></td>
+                                <td class="text-right"><strong>140</strong></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 20px;">AE Outbound</td>
+                                <td class="text-right">68</td>
+                                <td class="text-right">14</td>
+                                <td class="text-right">18</td>
+                                <td class="text-right">36</td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 20px;">BDR Outbound</td>
+                                <td class="text-right">41</td>
+                                <td class="text-right">22</td>
+                                <td class="text-right">19</td>
+                                <td class="text-right">0</td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 20px;">Marketing Sourced</td>
+                                <td class="text-right">166</td>
+                                <td class="text-right">20</td>
+                                <td class="text-right">48</td>
+                                <td class="text-right">98</td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 20px;">Marketing Assisted</td>
+                                <td class="text-right">6</td>
+                                <td class="text-right">0</td>
+                                <td class="text-right">4</td>
+                                <td class="text-right">2</td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 20px;">Partner Sourced</td>
+                                <td class="text-right">7</td>
+                                <td class="text-right">1</td>
+                                <td class="text-right">2</td>
+                                <td class="text-right">4</td>
+                            </tr>
+                            <tr>
+                                <td>S2s</td>
+                                <td class="text-right">107</td>
+                                <td class="text-right">17</td>
+                                <td class="text-right">27</td>
+                                <td class="text-right">63</td>
+                            </tr>
+                            <tr>
+                                <td>S3s</td>
+                                <td class="text-right">93</td>
+                                <td class="text-right">10</td>
+                                <td class="text-right">22</td>
+                                <td class="text-right">61</td>
+                            </tr>
+                            <tr class="subtotal">
+                                <td><strong>S3$</strong></td>
+                                <td class="text-right"><strong>$4,506,000</strong></td>
+                                <td class="text-right"><strong>$2,374,000</strong></td>
+                                <td class="text-right"><strong>$1,523,000</strong></td>
+                                <td class="text-right"><strong>$609,000</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-container">
+                    <h3>Q1FY27 Team Distribution — QoQ Change</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="text-right">Q1FY27</th>
+                                <th class="text-right">Q4FY26</th>
+                                <th class="text-right">QoQ Change</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Marketing Sourced</td>
+                                <td class="text-right">57.83%</td>
+                                <td class="text-right">63.86%</td>
+                                <td class="text-right" style="color: #d32f2f;">-9.44%</td>
+                            </tr>
+                            <tr>
+                                <td>AE Outbound</td>
+                                <td class="text-right">23.53%</td>
+                                <td class="text-right">18.81%</td>
+                                <td class="text-right" style="color: #109618;">25.09%</td>
+                            </tr>
+                            <tr>
+                                <td>BDR Outbound</td>
+                                <td class="text-right">14.36%</td>
+                                <td class="text-right">12.87%</td>
+                                <td class="text-right" style="color: #109618;">11.58%</td>
+                            </tr>
+                            <tr>
+                                <td>Partner Sourced</td>
+                                <td class="text-right">2.20%</td>
+                                <td class="text-right">1.49%</td>
+                                <td class="text-right" style="color: #109618;">47.65%</td>
+                            </tr>
+                            <tr>
+                                <td>Marketing Assisted</td>
+                                <td class="text-right">2.09%</td>
+                                <td class="text-right">2.97%</td>
+                                <td class="text-right" style="color: #d32f2f;">-29.63%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: Efficiency Assumptions -->
+        <div id="tab2" class="tab-content">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Marketing CPO Target</div>
+                    <div class="metric-value">$12,296</div>
+                    <div class="metric-subtext">Blended annual cost per opportunity</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">AE Target (Q4)</div>
+                    <div class="metric-value">42</div>
+                    <div class="metric-subtext">S1s per AE per quarter</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">BDR Target (Q4)</div>
+                    <div class="metric-value">17</div>
+                    <div class="metric-subtext">S1s per BDR per quarter</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Partner Target (Q4)</div>
+                    <div class="metric-value">0.56</div>
+                    <div class="metric-subtext">Referrals per partner per quarter</div>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <h3>Key Assumptions</h3>
+                <ul>
+                    <li><strong>Marketing Efficiency:</strong> Decreasing cost per opportunity with 33% improvement in Q1, 17% in Q2, then stabilizes and moderates through year-end.</li>
+                    <li><strong>AE Outbound Ramp:</strong> Aggressive ramp with 100% efficiency in Q1 (doubling from current), 40% in Q2, 30% in Q3, 35% in Q4 — reflecting significant investment in this channel.</li>
+                    <li><strong>BDR Outbound Gains:</strong> Moderate efficiency improvements at 53% in Q1, 13% in Q2, 20% in Q3, 7% in Q4 — aligns with declining productivity trend.</li>
+                    <li><strong>Partner Efficiency:</strong> Assumes consistent 75% quarterly improvement across all segments — this is an aggressive assumption that warrants ongoing monitoring.</li>
+                    <li><strong>Front-Loaded Risk:</strong> Key risk is that efficiency gains are front-loaded (especially AE), requiring rapid ramp-up in Q1 and successful execution early in the year.</li>
+                </ul>
+            </div>
+
+            <div class="chart-container">
+                <h3>Efficiency Gains by Team Source (QoQ %)</h3>
+                <div class="chart-wrapper">
+                    <canvas id="chart4"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>S1 per Headcount by Team — FY26 Actuals vs FY27 Plan</h3>
+                <div class="chart-wrapper tall">
+                    <canvas id="chart5"></canvas>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <h3>Efficiency Gain Assumptions by Team and Segment</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Team Source</th>
+                            <th class="text-right">Segment</th>
+                            <th class="text-right">Q1FY27</th>
+                            <th class="text-right">Q2FY27</th>
+                            <th class="text-right">Q3FY27</th>
+                            <th class="text-right">Q4FY27</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="subtotal">
+                            <td colspan="2">Marketing Efficiency</td>
+                            <td colspan="4"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>ENT</td>
+                            <td class="text-right">40%</td>
+                            <td class="text-right">0%</td>
+                            <td class="text-right">0%</td>
+                            <td class="text-right">-10%</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>MM</td>
+                            <td class="text-right">40%</td>
+                            <td class="text-right">-50%</td>
+                            <td class="text-right">50%</td>
+                            <td class="text-right">-40%</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>SMB</td>
+                            <td class="text-right">20%</td>
+                            <td class="text-right">100%</td>
+                            <td class="text-right">-65%</td>
+                            <td class="text-right">65%</td>
+                        </tr>
+                        <tr class="subtotal">
+                            <td colspan="2">AE Outbound Efficiency</td>
+                            <td colspan="4"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>ENT</td>
+                            <td class="text-right">100%</td>
+                            <td class="text-right">40%</td>
+                            <td class="text-right">10%</td>
+                            <td class="text-right">20%</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>MM</td>
+                            <td class="text-right">150%</td>
+                            <td class="text-right">0%</td>
+                            <td class="text-right">20%</td>
+                            <td class="text-right">20%</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>SMB</td>
+                            <td class="text-right">50%</td>
+                            <td class="text-right">80%</td>
+                            <td class="text-right">60%</td>
+                            <td class="text-right">65%</td>
+                        </tr>
+                        <tr class="subtotal">
+                            <td colspan="2">BDR Outbound Efficiency</td>
+                            <td colspan="4"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>ENT</td>
+                            <td class="text-right">100%</td>
+                            <td class="text-right">40%</td>
+                            <td class="text-right">10%</td>
+                            <td class="text-right">20%</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>MM</td>
+                            <td class="text-right">60%</td>
+                            <td class="text-right">0%</td>
+                            <td class="text-right">50%</td>
+                            <td class="text-right">0%</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>SMB</td>
+                            <td class="text-right">0%</td>
+                            <td class="text-right">0%</td>
+                            <td class="text-right">0%</td>
+                            <td class="text-right">0%</td>
+                        </tr>
+                        <tr class="subtotal">
+                            <td colspan="2">Partner Efficiency (all segments)</td>
+                            <td class="text-right">75%</td>
+                            <td class="text-right">75%</td>
+                            <td class="text-right">75%</td>
+                            <td class="text-right">75%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 3: Segment Breakdown -->
+        <div id="tab3" class="tab-content">
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;">
+                <div class="metric-card">
+                    <div class="metric-label">ENT S1 Allocation</div>
+                    <div class="metric-value">321</div>
+                    <div class="metric-subtext">18% of total | AOV: $332K | CR: 6%</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">MM S1 Target</div>
+                    <div class="metric-value">397</div>
+                    <div class="metric-subtext">22% of total | AOV: $102K | CR: 10.6%</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">SMB S1 Target</div>
+                    <div class="metric-value">1,082</div>
+                    <div class="metric-subtext">60% of total | AOV: $14K | CR: 19.5%</div>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;">
+                <div class="metric-card">
+                    <div class="metric-label">ENT ARR Target</div>
+                    <div class="metric-value">$1.28M</div>
+                    <div class="metric-subtext">Highest per-deal value segment</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">MM ARR Target</div>
+                    <div class="metric-value">$1.80M</div>
+                    <div class="metric-subtext">Largest ARR contribution</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">SMB ARR Target</div>
+                    <div class="metric-value">$1.73M</div>
+                    <div class="metric-subtext">Volume-driven pipeline breadth</div>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <h3>Segment Strategy</h3>
+                <ul>
+                    <li><strong>SMB Dominance:</strong> SMB dominates at 1,082 S1s (60% of total), driven by Marketing Sourced (651) and AE Outbound (376), creating pipeline breadth.</li>
+                    <li><strong>MM Contribution:</strong> MM contributes 397 S1s (22%), with a balanced split between Marketing (204), BDR (96), and AE (81), providing stability.</li>
+                    <li><strong>ENT Quality Focus:</strong> ENT accounts for 321 S1s (18%), but these carry the highest AOV ($332K vs $102K MM, $14K SMB) — critical for hitting the $12M ARR target.</li>
+                    <li><strong>Deliberate Mix:</strong> The segment mix reflects a deliberate shift: SMB volume creates pipeline breadth while ENT quality drives ARR concentration and revenue growth.</li>
+                    <li><strong>Conversion Basis:</strong> Key conversion rates used: ENT 6%, MM 10.6%, SMB 19.5% (S1 to Closed/Won), based on trailing 8-quarter averages.</li>
+                </ul>
+            </div>
+
+            <div class="chart-container">
+                <h3>S1 Targets by Segment & Quarter</h3>
+                <div class="chart-wrapper">
+                    <canvas id="chart6"></canvas>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="chart-container">
+                    <h3>FY27 ARR Contribution by Segment</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="chart7"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3>S1 to Closed/Won Conversion Rate by Segment</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="chart8"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <h3>Segment Detail — S1 Targets, ARR, and Key Metrics</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Segment</th>
+                            <th class="text-right">Q1 S1s</th>
+                            <th class="text-right">Q1 ARR</th>
+                            <th class="text-right">Q2 S1s</th>
+                            <th class="text-right">Q2 ARR</th>
+                            <th class="text-right">Q3 S1s</th>
+                            <th class="text-right">Q3 ARR</th>
+                            <th class="text-right">Q4 S1s</th>
+                            <th class="text-right">Q4 ARR</th>
+                            <th class="text-right">Annual S1s</th>
+                            <th class="text-right">Annual ARR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>ENT</strong></td>
+                            <td class="text-right">54</td>
+                            <td class="text-right">$127K</td>
+                            <td class="text-right">70</td>
+                            <td class="text-right">$279K</td>
+                            <td class="text-right">84</td>
+                            <td class="text-right">$360K</td>
+                            <td class="text-right">101</td>
+                            <td class="text-right">$393K</td>
+                            <td class="text-right">310</td>
+                            <td class="text-right">$1.28M</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MM</strong></td>
+                            <td class="text-right">87</td>
+                            <td class="text-right">$280K</td>
+                            <td class="text-right">97</td>
+                            <td class="text-right">$356K</td>
+                            <td class="text-right">103</td>
+                            <td class="text-right">$477K</td>
+                            <td class="text-right">110</td>
+                            <td class="text-right">$507K</td>
+                            <td class="text-right">397</td>
+                            <td class="text-right">$1.80M</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SMB</strong></td>
+                            <td class="text-right">139</td>
+                            <td class="text-right">$250K</td>
+                            <td class="text-right">193</td>
+                            <td class="text-right">$304K</td>
+                            <td class="text-right">295</td>
+                            <td class="text-right">$430K</td>
+                            <td class="text-right">454</td>
+                            <td class="text-right">$615K</td>
+                            <td class="text-right">1,082</td>
+                            <td class="text-right">$1.73M</td>
+                        </tr>
+                        <tr class="subtotal" style="background-color: #e8f0ff;">
+                            <td><strong>TOTAL</strong></td>
+                            <td class="text-right"><strong>280</strong></td>
+                            <td class="text-right"><strong>$657K</strong></td>
+                            <td class="text-right"><strong>360</strong></td>
+                            <td class="text-right"><strong>$939K</strong></td>
+                            <td class="text-right"><strong>482</strong></td>
+                            <td class="text-right"><strong>$1.27M</strong></td>
+                            <td class="text-right"><strong>665</strong></td>
+                            <td class="text-right"><strong>$1.52M</strong></td>
+                            <td class="text-right"><strong>1,787</strong></td>
+                            <td class="text-right"><strong>$4.41M</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 4: Budget & Investment -->
+        <div id="tab4" class="tab-content">
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;">
+                <div class="metric-card">
+                    <div class="metric-label">Modified Budget</div>
+                    <div class="metric-value">$4.0M</div>
+                    <div class="metric-subtext">FY27 total marketing allocation</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Blended CPO Target</div>
+                    <div class="metric-value">$12,296</div>
+                    <div class="metric-subtext">Annual average cost per opportunity</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">ARR Gap at Current Budget</div>
+                    <div class="metric-value">-$821K</div>
+                    <div class="metric-subtext">At $4.7M budget vs. $12.0M target</div>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <h3>Budget Strategy & Risk Assessment</h3>
+                <ul>
+                    <li><strong>Front-Loaded Spend:</strong> Total modified budget is $4.0M for FY27, with front-loaded spend ($1.0M in Q1, $1.8M in Q2, $600K each in Q3/Q4).</li>
+                    <li><strong>Budget Allocation:</strong> Distribution is 82% New Business, 10% Retention, 8% Operational, and variable Awareness component across quarters.</li>
+                    <li><strong>Efficiency as Enabler:</strong> Efficiency improvements across marketing, AE outbound, and BDR teams are the primary lever allowing the plan to deliver on S1 targets within this budget envelope.</li>
+                    <li><strong>Key Risks:</strong> Front-loaded budget means Q3-Q4 rely heavily on pipeline generated from earlier quarters converting; efficiency assumptions are aggressive and require disciplined execution.</li>
+                </ul>
+            </div>
+
+            <div class="chart-container">
+                <h3>Quarterly Budget Distribution</h3>
+                <div class="chart-wrapper">
+                    <canvas id="chart9"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>Cost per Opportunity — Scenario 1 (No Efficiency) vs Scenario 2 (With Efficiency)</h3>
+                <div class="chart-wrapper">
+                    <canvas id="chart10"></canvas>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <h3>Budget Allocation Detail</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th class="text-right">Q4FY26</th>
+                            <th class="text-right">Q1FY27</th>
+                            <th class="text-right">Q2FY27</th>
+                            <th class="text-right">Q3FY27</th>
+                            <th class="text-right">Q4FY27</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Quarterly Distribution</strong></td>
+                            <td class="text-right">—</td>
+                            <td class="text-right">25%</td>
+                            <td class="text-right">45%</td>
+                            <td class="text-right">15%</td>
+                            <td class="text-right">15%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>New Biz %</strong></td>
+                            <td class="text-right">50%</td>
+                            <td class="text-right">82%</td>
+                            <td class="text-right">42%</td>
+                            <td class="text-right">72%</td>
+                            <td class="text-right">72%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Awareness %</strong></td>
+                            <td class="text-right">30%</td>
+                            <td class="text-right">0%</td>
+                            <td class="text-right">40%</td>
+                            <td class="text-right">10%</td>
+                            <td class="text-right">10%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Retention %</strong></td>
+                            <td class="text-right">10%</td>
+                            <td class="text-right">10%</td>
+                            <td class="text-right">10%</td>
+                            <td class="text-right">10%</td>
+                            <td class="text-right">10%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Operational %</strong></td>
+                            <td class="text-right">10%</td>
+                            <td class="text-right">8%</td>
+                            <td class="text-right">8%</td>
+                            <td class="text-right">8%</td>
+                            <td class="text-right">8%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>This document is confidential and prepared for executive review. For questions, please contact Jennifer Baker at jenn.baker@gladly.com.</p>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function showTab(evt, tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // Chart.js color scheme
+        const colors = {
+            primary: '#3366cc',
+            secondary: '#ff9900',
+            success: '#109618',
+            light: '#ddd',
+            lightBlue: '#e8f0ff'
+        };
+
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        font: { family: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" },
+                        boxWidth: 12,
+                        padding: 15
+                    }
+                }
+            }
+        };
+
+        // Chart 1: FY27 S1 Targets by Team Source & Quarter (Stacked Bar)
+        const ctx1 = document.getElementById('chart1').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ['Q1FY27', 'Q2FY27', 'Q3FY27', 'Q4FY27'],
+                datasets: [
+                    {
+                        label: 'Marketing Sourced',
+                        data: [166, 200, 257, 333],
+                        backgroundColor: colors.primary
+                    },
+                    {
+                        label: 'AE Outbound',
+                        data: [68, 102, 146, 222],
+                        backgroundColor: colors.secondary
+                    },
+                    {
+                        label: 'BDR Outbound',
+                        data: [41, 50, 63, 69],
+                        backgroundColor: colors.success
+                    },
+                    {
+                        label: 'Partner Sourced',
+                        data: [6, 11, 19, 34],
+                        backgroundColor: '#9370db'
+                    },
+                    {
+                        label: 'Marketing Assisted',
+                        data: [6, 6, 6, 6],
+                        backgroundColor: '#ffc107'
+                    }
+                ]
+            },
+            options: {
+                ...chartOptions,
+                scales: {
+                    x: { stacked: true },
+                    y: { stacked: true }
+                }
+            }
+        });
+
+        // Chart 2: FY27 Team Source Distribution (Doughnut)
+        const ctx2 = document.getElementById('chart2').getContext('2d');
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: ['Marketing Sourced', 'AE Outbound', 'BDR Outbound', 'Partner Sourced', 'Marketing Assisted'],
+                datasets: [{
+                    data: [956, 538, 223, 70, 24],
+                    backgroundColor: [colors.primary, colors.secondary, colors.success, '#9370db', '#ffc107'],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                ...chartOptions,
+                plugins: {
+                    ...chartOptions.plugins,
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => {
+                                const label = ctx.label || '';
+                                const value = ctx.parsed || 0;
+                                const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                const pct = ((value / total) * 100).toFixed(1);
+                                return `${label}: ${value} (${pct}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chart 3: Team Source Share Comparison (Bar)
+        const ctx3 = document.getElementById('chart3').getContext('2d');
+        new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                labels: ['Marketing Sourced', 'AE Outbound', 'BDR Outbound', 'Partner Sourced', 'Marketing Assisted'],
+                datasets: [
+                    {
+                        label: 'Q4FY26 Actual (%)',
+                        data: [63.9, 18.8, 12.9, 1.5, 3.0],
+                        backgroundColor: '#ccc'
+                    },
+                    {
+                        label: 'FY27 Plan (%)',
+                        data: [52.8, 29.7, 12.3, 3.9, 1.3],
+                        backgroundColor: colors.primary
+                    }
+                ]
+            },
+            options: {
+                ...chartOptions,
+                indexAxis: 'y',
+                scales: {
+                    x: { max: 70 }
+                }
+            }
+        });
+
+        // Chart 4: Efficiency Gains by Team Source (Line)
+        const ctx4 = document.getElementById('chart4').getContext('2d');
+        new Chart(ctx4, {
+            type: 'line',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [
+                    {
+                        label: 'Marketing',
+                        data: [33.3, 16.7, -5, 5],
+                        borderColor: colors.primary,
+                        backgroundColor: 'rgba(51, 102, 204, 0.1)',
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: colors.primary
+                    },
+                    {
+                        label: 'AE Outbound',
+                        data: [100, 40, 30, 35],
+                        borderColor: colors.secondary,
+                        backgroundColor: 'rgba(255, 153, 0, 0.1)',
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: colors.secondary
+                    },
+                    {
+                        label: 'BDR Outbound',
+                        data: [53.3, 13.3, 20, 6.7],
+                        borderColor: colors.success,
+                        backgroundColor: 'rgba(16, 150, 24, 0.1)',
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: colors.success
+                    },
+                    {
+                        label: 'Partner',
+                        data: [75, 75, 75, 75],
+                        borderColor: '#9370db',
+                        backgroundColor: 'rgba(147, 112, 219, 0.1)',
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#9370db'
+                    }
+                ]
+            },
+            options: {
+                ...chartOptions,
+                scales: {
+                    y: {
+                        title: { display: true, text: 'Efficiency Gain (%)' }
+                    }
+                }
+            }
+        });
+
+        // Chart 5: S1 per Headcount (Grouped Bar)
+        const ctx5 = document.getElementById('chart5').getContext('2d');
+        new Chart(ctx5, {
+            type: 'bar',
+            data: {
+                labels: ['Q1FY26', 'Q2FY26', 'Q3FY26', 'Q4FY26', 'Q1FY27', 'Q2FY27', 'Q3FY27', 'Q4FY27'],
+                datasets: [
+                    {
+                        label: 'AE Outbound (S1 per AE)',
+                        data: [3, 3, 8, 8, 12, 18, 27, 42],
+                        backgroundColor: colors.secondary
+                    },
+                    {
+                        label: 'BDR Outbound (S1 per BDR)',
+                        data: [11, 11, 6, 4, 10, 12, 16, 17],
+                        backgroundColor: colors.success
+                    }
+                ]
+            },
+            options: {
+                ...chartOptions,
+                scales: {
+                    x: { stacked: false },
+                    y: { stacked: false }
+                }
+            }
+        });
+
+        // Chart 6: S1 Targets by Segment & Quarter (Stacked Bar)
+        const ctx6 = document.getElementById('chart6').getContext('2d');
+        new Chart(ctx6, {
+            type: 'bar',
+            data: {
+                labels: ['Q1FY27', 'Q2FY27', 'Q3FY27', 'Q4FY27'],
+                datasets: [
+                    {
+                        label: 'ENT',
+                        data: [54, 70, 84, 101],
+                        backgroundColor: colors.primary
+                    },
+                    {
+                        label: 'MM',
+                        data: [87, 97, 103, 110],
+                        backgroundColor: colors.secondary
+                    },
+                    {
+                        label: 'SMB',
+                        data: [139, 193, 295, 454],
+                        backgroundColor: colors.success
+                    }
+                ]
+            },
+            options: {
+                ...chartOptions,
+                scales: {
+                    x: { stacked: true },
+                    y: { stacked: true }
+                }
+            }
+        });
+
+        // Chart 7: FY27 ARR Contribution by Segment (Doughnut)
+        const ctx7 = document.getElementById('chart7').getContext('2d');
+        new Chart(ctx7, {
+            type: 'doughnut',
+            data: {
+                labels: ['ENT', 'MM', 'SMB'],
+                datasets: [{
+                    data: [1284467, 1795822, 1730597],
+                    backgroundColor: [colors.primary, colors.secondary, colors.success],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                ...chartOptions,
+                plugins: {
+                    ...chartOptions.plugins,
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => {
+                                const label = ctx.label || '';
+                                const value = ctx.parsed || 0;
+                                const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                const pct = ((value / total) * 100).toFixed(1);
+                                const formatted = '$' + (value / 1000000).toFixed(2) + 'M';
+                                return `${label}: ${formatted} (${pct}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chart 8: S1 to Closed/Won Conversion Rate by Segment (Grouped Bar)
+        const ctx8 = document.getElementById('chart8').getContext('2d');
+        new Chart(ctx8, {
+            type: 'bar',
+            data: {
+                labels: ['Q1FY26', 'Q2FY26', 'Q3FY26', 'Q4FY26'],
+                datasets: [
+                    {
+                        label: 'ENT',
+                        data: [3.3, 9.1, 2.8, 0],
+                        backgroundColor: colors.primary
+                    },
+                    {
+                        label: 'MM',
+                        data: [6.9, 6.5, 6.1, 2.6],
+                        backgroundColor: colors.secondary
+                    },
+                    {
+                        label: 'SMB',
+                        data: [18.8, 17.2, 11.2, 4.0],
+                        backgroundColor: colors.success
+                    }
+                ]
+            },
+            options: {
+                ...chartOptions,
+                scales: {
+                    y: {
+                        title: { display: true, text: 'Conversion Rate (%)' },
+                        max: 25
+                    }
+                }
+            }
+        });
+
+        // Chart 9: Quarterly Budget Distribution (Bar)
+        const ctx9 = document.getElementById('chart9').getContext('2d');
+        new Chart(ctx9, {
+            type: 'bar',
+            data: {
+                labels: ['Q4FY26', 'Q1FY27', 'Q2FY27', 'Q3FY27', 'Q4FY27'],
+                datasets: [{
+                    label: 'Budget',
+                    data: [1211268, 1000000, 1800000, 600000, 600000],
+                    backgroundColor: colors.primary
+                }]
+            },
+            options: {
+                ...chartOptions,
+                plugins: {
+                    ...chartOptions.plugins,
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => {
+                                const value = ctx.parsed.y || 0;
+                                return '$' + (value / 1000000).toFixed(2) + 'M';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chart 10: Cost per Opportunity Scenarios (Grouped Bar)
+        const ctx10 = document.getElementById('chart10').getContext('2d');
+        new Chart(ctx10, {
+            type: 'bar',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [
+                    {
+                        label: 'Scenario 1 (No Efficiency)',
+                        data: [12511, 12511, 12511, 12511],
+                        backgroundColor: '#999'
+                    },
+                    {
+                        label: 'Scenario 2 (With Efficiency)',
+                        data: [9190, 9212, 8655, 9687],
+                        backgroundColor: colors.success
+                    }
+                ]
+            },
+            options: {
+                ...chartOptions,
+                plugins: {
+                    ...chartOptions.plugins,
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => {
+                                const value = ctx.parsed.y || 0;
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chart 11 removed
+    </script>
+</body>
+</html>
